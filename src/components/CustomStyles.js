@@ -22,9 +22,8 @@ export const useFormStyles = createUseStyles({
             fontSize: '0.9em'
         },
         '& label': {
-            fontSize: '1em',
+            fontSize: '0.9em',
             fontWeight: 500,
-            textTransform: 'capitalize',
             textAlign: 'initial'
         }
     },
@@ -32,5 +31,8 @@ export const useFormStyles = createUseStyles({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center'
-    }
+    },
+    formDiv: {
+        height: '50vh'
+    },
 })

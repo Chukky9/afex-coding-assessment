@@ -2,6 +2,7 @@ import React, { Fragment, lazy, Suspense, useEffect } from 'react';
 import { Routes as Switch, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from '../views/Home';
 import Welcome from '../views/Welcome';
+import { ResetForm, OtpValidation } from '../components/Authentication/PasswordReset';
 import ActivitySpinner from '../components/ActivitySpinner';
 
 const Authentication = lazy(() => import(/* webpackChunkName: "Authentication" */'../views/Authentication'))
@@ -26,8 +27,12 @@ const Routes = () => {
 
                     <Route path="sign-in" element={<Suspense fallback={<ActivitySpinner/>}><Authentication/></Suspense>}>
                         <Route index element={<Suspense fallback={<ActivitySpinner/>}><SignIn/></Suspense>}/>
-                        
-                        <Route path="password-reset" element={<Suspense fallback={<ActivitySpinner/>}><PasswordReset/></Suspense>}/>
+
+                        <Route path="password-reset" element={<Suspense fallback={<ActivitySpinner/>}><PasswordReset/></Suspense>}>
+                            <Route index element={<ResetForm/>}/>
+
+                            <Route path="otp-validation" element={<OtpValidation/>}/>
+                        </Route>
                     </Route>
                 </Route>
             </Switch>
