@@ -4,7 +4,9 @@ import Home from '../views/Home';
 import Welcome from '../views/Welcome';
 import ActivitySpinner from '../components/ActivitySpinner';
 
-const SignIn = lazy(() => import(/* webpackChunkName: "Authentication.SignIn" */'../views/SignIn'))
+const Authentication = lazy(() => import(/* webpackChunkName: "Authentication" */'../views/Authentication'))
+const SignIn = lazy(() => import(/* webpackChunkName: "Authentication.SignIn" */'../components/Authentication/SignIn'))
+const PasswordReset = lazy(() => import(/* webpackChunkName: "Authentication.PasswordReset" */'../components/Authentication/PasswordReset'))
 
 const Routes = () => {
     const location = useLocation()
@@ -21,8 +23,12 @@ const Routes = () => {
                     <Route exact path="/" element={<Navigate to={{ pathname: '/welcome'}}/>}/>
 
                     <Route path="welcome" element={<Welcome />}/>
-                    
-                    <Route path="sign-in" element={<Suspense fallback={<ActivitySpinner/>}><SignIn/></Suspense>}/>
+
+                    <Route path="sign-in" element={<Suspense fallback={<ActivitySpinner/>}><Authentication/></Suspense>}>
+                        <Route index element={<Suspense fallback={<ActivitySpinner/>}><SignIn/></Suspense>}/>
+                        
+                        <Route path="password-reset" element={<Suspense fallback={<ActivitySpinner/>}><PasswordReset/></Suspense>}/>
+                    </Route>
                 </Route>
             </Switch>
         </Fragment>

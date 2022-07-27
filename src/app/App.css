@@ -23,6 +23,17 @@ body {
   min-height: 100vh;
 }
 
+.custom-card {
+  background: var(--white);
+  border-radius: 0.2em;
+  padding: 2em 3em;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  line-height: 2;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   
 }

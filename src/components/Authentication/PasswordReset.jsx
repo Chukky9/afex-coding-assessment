@@ -1,9 +1,9 @@
 import React from 'react';
 
-const SignIn = () => {
+const PasswordReset = () => {
     return (
         <></>
     );
 }
  
-export default SignIn;
+export default PasswordReset;

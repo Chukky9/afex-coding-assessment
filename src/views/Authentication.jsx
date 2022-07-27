@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { createUseStyles } from 'react-jss';
 
 const useStyles = createUseStyles({
@@ -10,7 +10,7 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        '& a': {
+        '& button': {
             margin: '1em 0',
             border: 'none',
             padding: '1em',
@@ -21,32 +21,31 @@ const useStyles = createUseStyles({
             textDecoration: 'none'
         },
         '& .signin-button': {
-            background: 'var(--green)'
+            background: 'var(--green)',
         },
-        '& .register-button': {
-            background: 'var(--black)'
+        '& .back-button': {
+            color: 'var(--black) !important',
+        },
+        '& a': {
+            color: 'var(--red)'
+        },
+        '& a:hover': {
+            color: 'var(--red)',
+            textDecoration: 'underline'
         }
-    }
+    },
 })
 
-const Welcome = () => {
+const Authentication = () => {
     const classes = useStyles()
 
     return (
         <div className={classes.wrapper}>
             <div className='custom-card'>
-                <h5>Sign In to ComX</h5>
-                <small>Welcome to Comx</small>
-                <Link to='/sign-in' className='signin-button'>Sign In</Link>
-            </div>
-
-            <div className='custom-card'>
-                <h5>Create an Account</h5>
-                <small>Join the family</small>
-                <Link to='' className='register-button'>Register</Link>
+                <Outlet/>
             </div>
         </div>
     );
 }
  
-export default Welcome;
+export default Authentication;
