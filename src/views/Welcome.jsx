@@ -43,7 +43,7 @@ const Welcome = () => {
             <div className='custom-card'>
                 <h5>Create an Account</h5>
                 <small>Join the family</small>
-                <Link to='' className='register-button'>Register</Link>
+                <Link to='/register' className='register-button'>Register</Link>
             </div>
         </div>
     );

@@ -33,6 +33,34 @@ export const useFormStyles = createUseStyles({
         alignItems: 'center'
     },
     formDiv: {
-        height: '50vh'
+        height: '40vh'
+    },
+})
+
+export const useRegistrationStyles = createUseStyles({
+    halfInput: {
+        width: '45%'
+    },
+    button: {
+        background: 'none',
+        padding: '0.5em',
+        fontWeight: 600,
+        border: 'none',
+        color: 'var(--red)'
+    },
+    linkDiv: {
+        textAlign: 'initial',
+        margin: '1em 0'
+    },
+    links: {
+        padding: '1em 2em',
+        border: '1px solid var(--black)',
+        margin: '0.5em',
+        fontSize: '0.9em',
+        borderRadius: '0.2em'
+    },
+    small: {
+        color: 'var(--grey)',
+        margin: '0.5em'
     },
 })

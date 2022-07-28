@@ -7,3 +7,13 @@ export const formReducer = (state, event = null) => {
         [event.name]: event.value
     }
 }
+
+export const userReducer = (state, user = {}) => {
+    if (!Object.keys(user).length) {
+        return {}
+    }
+    return {
+        ...state,
+        ...user
+    }
+}

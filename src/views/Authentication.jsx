@@ -4,7 +4,7 @@ import { createUseStyles } from 'react-jss';
 
 const useStyles = createUseStyles({
     wrapper: {
-        width: '50%',
+        width: '40%',
         padding: '1em',
         height: '100%',
         display: 'flex',
