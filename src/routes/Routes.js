@@ -14,6 +14,10 @@ const PasswordReset = lazy(() => import(/* webpackChunkName: "Authentication.Pas
 const Register = lazy(() => import(/* webpackChunkName: "Register" */'../views/Register'))
 const RegistrationSuccessful = lazy(() => import(/* webpackChunkName: "Register.Successful" */'../components/Registration/RegistrationSuccessful'))
 
+const Dashboard = lazy(() => import(/* webpackChunkName: "Dashboard" */'../views/Dashboard'))
+const Market = lazy(() => import(/* webpackChunkName: "Dashboard.Market" */'../components/Dashboard/Market'))
+const MarketOrderBook = lazy(() => import(/* webpackChunkName: "Dashboard.Market.OrderBook" */'../components/Dashboard/Market.OrderBook'));
+
 const Routes = () => {
     const location = useLocation()
 
@@ -25,6 +29,17 @@ const Routes = () => {
     return (
         <Fragment>
             <Switch>
+                {/* Dashboard routes */}
+                <Route path="/dashboard" element={<Suspense fallback={<ActivitySpinner/>}><Dashboard/></Suspense>}>
+                    <Route exact path="/dashboard" element={<Navigate to={{ pathname: '/dashboard/market' }}/>}/>
+
+                    <Route path="market" element={<Suspense fallback={<ActivitySpinner/>}><Market/></Suspense>}>
+                        <Route exact path="/dashboard/market" element={<Navigate to={{ pathname: '/dashboard/market/order-book' }}/>}/>
+
+                        <Route path="order-book" element={<Suspense fallback={<ActivitySpinner/>}><MarketOrderBook/></Suspense>}/>
+                    </Route>
+                </Route>
+
                 <Route path="/" element={<Home />}>
                     <Route exact path="/" element={<Navigate to={{ pathname: '/welcome'}}/>}/>
 
@@ -59,9 +74,6 @@ const Routes = () => {
                         <Route path="corporate/otp-verification" element={<CorporateOtpValidation/>}/>
                         <Route path="corporate/registration-successful" element={<Suspense fallback={<ActivitySpinner/>}><RegistrationSuccessful/></Suspense>}/>
                     </Route>
-
-                    {/* Dashboard routes */}
-                    <Route path="dashboard" element={<></>}></Route>
                 </Route>
             </Switch>
         </Fragment>
