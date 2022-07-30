@@ -1,9 +1,13 @@
-import React, { Fragment, useReducer, useEffect } from 'react';
+import React, { Fragment, useReducer, useEffect, useState, useRef } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Input } from 'antd';
 import { createUseStyles } from 'react-jss';
 import { formReducer } from '../../utils/helpers';
 import { useFormStyles } from '../CustomStyles';
+import AuthenticationService from '../../services/AuthenticationService';
+import { alert } from '../../utils/alerts';
+
+const { passwordReset, passwordResetOtpValidation } = AuthenticationService()
 
 const useStyles = createUseStyles({
     small: {
@@ -17,6 +21,10 @@ const useStyles = createUseStyles({
         border: 'none'
     },
     proceedButton: {
+        color: 'var(--red)'
+    },
+    alerts:  {
+        textAlign: 'initial',
         color: 'var(--red)'
     }
 })
@@ -40,6 +48,8 @@ export const ResetForm = () => {
     const classes = useStyles()
     const formClasses = useFormStyles()
     const [resetPasswordData, setResetPasswordData] = useReducer(formReducer, {})
+    const [validated, setValidated] = useState(true)
+    let mounted = useRef(true)
 
     const handleInput = event => {
         setResetPasswordData({
@@ -48,14 +58,23 @@ export const ResetForm = () => {
         })
     }
 
-    const handleProceed = event => {
-        event.preventDefault()
-        console.log(resetPasswordData)
+    const handleProceed = async () => {
         if (!resetPasswordData.email) {
-            alert('Please put a valid email')
+            setValidated(false)
             return;
+        } else {
+            setValidated(true)
         }
-        navigate("/sign-in/password-reset/otp-validation", { state: { email: resetPasswordData?.email ?? null }})
+        console.log(resetPasswordData)
+        const emailConfirmResponse = await passwordReset(resetPasswordData)
+        console.log('response from inside component', emailConfirmResponse)
+        if (mounted.current) {
+            if (!emailConfirmResponse || (emailConfirmResponse && emailConfirmResponse.responseCode !== '100')) {
+                alert("Error verifying email", 'danger')
+            } else {
+                navigate("/sign-in/password-reset/otp-validation", { state: { email: resetPasswordData?.email ?? null }})
+            }
+        }
     }
 
     const goBack = event => {
@@ -63,13 +82,21 @@ export const ResetForm = () => {
         navigate(-1)
     }
 
+    useEffect(() => {
+        mounted.current = true
+
+        return () => mounted.current = false
+    })
+
     return (
         <Fragment>
             <div className={formClasses.formDiv}>
                 <div className={formClasses.formGroup}>
                     <label htmlFor='email'>Enter the Email Address you registered with</label>
                     <Input id='email' name='email' placeholder='Enter your Email' type='email'
-                        required value={resetPasswordData.email || ''} onChange={handleInput}/>
+                        required value={resetPasswordData.email || ''} onChange={handleInput}
+                        status={(!validated && (!resetPasswordData.email || (resetPasswordData.email && !resetPasswordData.email.includes('@')))) ? 'error' : undefined}/>
+                    { (!validated && (!resetPasswordData.email || (resetPasswordData.email && !resetPasswordData.email.includes('@')))) && <small className={classes.alerts}>Enter a valid email</small>}
                     <small className={classes.small}>Note that you'll be sent an OTP to the email address provided</small>
                 </div>
             </div>
@@ -88,29 +115,34 @@ export const OtpValidation = () => {
     const classes = useStyles()
     const formClasses = useFormStyles()
     const [resetPasswordData, setResetPasswordData] = useReducer(formReducer, {})
-
-    useEffect(() => {
-        if (!state?.email) {
-            navigate('/sign-in')
-        }
-    }, [state])
+    const [validated, setValidated] = useState(true)
+    let mounted = useRef(true)
 
     const handleInput = event => {
-        event.preventDefault()
         setResetPasswordData({
             name: event.target.name,
             value: event.target.value
         })
     }
 
-    const handleFinish = event => {
-        event.preventDefault()
-        console.log(resetPasswordData)
-        if (!resetPasswordData.otp) {
-            alert('Please put a valid OTP')
+    const handleFinish = async () => {
+        if (!resetPasswordData.email) {
+            setValidated(false)
             return;
+        } else {
+            setValidated(true)
         }
-        navigate('/sign-in')
+        console.log(resetPasswordData)
+        let data = { ...resetPasswordData, email: state.email }
+        const otpValidationResponse = await passwordResetOtpValidation(data)
+        console.log('response from inside component', otpValidationResponse)
+        if (mounted.current) {
+            if (!otpValidationResponse || (otpValidationResponse && otpValidationResponse.responseCode !== '100')) {
+                alert('Error processing OTP', 'danger')
+            } else {
+                navigate('/sign-in')
+            }
+        }
     }
 
     const goBack = () => {
@@ -119,13 +151,25 @@ export const OtpValidation = () => {
 
     const resendOtp = () => {}
 
+    useEffect(() => {
+        mounted.current = true
+
+        if (!state?.email) {
+            navigate('/sign-in')
+        }
+
+        return () => mounted.current = false
+    }, [state])
+
     return (
         <Fragment>
             <div className={formClasses.formDiv}>
                 <div className={formClasses.formGroup}>
                     <label htmlFor='otp'>Enter the 4-digit code that was sent to { (state && state.email) ? state.email : 'name@mymail.com' }</label>
                     <Input id='otp' name='otp' placeholder='Enter Code'
-                        required value={resetPasswordData.otp || ''} onChange={handleInput}/>
+                        required value={resetPasswordData.otp || ''} onChange={handleInput}
+                        status={(!validated && !resetPasswordData.otp) ?  'error' : undefined}/>
+                    { (!validated && !resetPasswordData.otp) && <small className={classes.alerts}>This field is required</small>}
                     <span role='button' onClick={resendOtp}>
                         <small className={classes.small}>Resend Code</small>
                     </span>

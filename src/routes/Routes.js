@@ -6,6 +6,7 @@ import { ResetForm, OtpValidation } from '../components/Authentication/PasswordR
 import { IndividualBasicInformation, IndividualLoginDetails, IndividualOtpValidation } from '../components/Registration/Individual';
 import { CorporateCompanyInformation, CorporateLoginDetails, CorporateOtpValidation } from '../components/Registration/Corporate';
 import ActivitySpinner from '../components/ActivitySpinner';
+import RouteGuard from './RouteGuard';
 
 const Authentication = lazy(() => import(/* webpackChunkName: "Authentication" */'../views/Authentication'))
 const SignIn = lazy(() => import(/* webpackChunkName: "Authentication.SignIn" */'../components/Authentication/SignIn'))
@@ -30,7 +31,7 @@ const Routes = () => {
         <Fragment>
             <Switch>
                 {/* Dashboard routes */}
-                <Route path="/dashboard" element={<Suspense fallback={<ActivitySpinner/>}><Dashboard/></Suspense>}>
+                <Route path="/dashboard" element={<RouteGuard routeRedirect="/sign-in" component={Dashboard}/>}>
                     <Route exact path="/dashboard" element={<Navigate to={{ pathname: '/dashboard/market' }}/>}/>
 
                     <Route path="market" element={<Suspense fallback={<ActivitySpinner/>}><Market/></Suspense>}>

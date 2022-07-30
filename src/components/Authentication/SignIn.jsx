@@ -1,10 +1,17 @@
-import React, { Fragment, useReducer } from 'react';
+import React, { Fragment, useReducer, useState, useRef, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUseStyles } from 'react-jss';
 import { useFormStyles } from '../CustomStyles';
 import { EyeTwoTone, EyeInvisibleOutlined } from '@ant-design/icons';
 import { Input, Checkbox } from 'antd';
 import { formReducer } from '../../utils/helpers';
+import { UserContext } from '../../contexts/UserContext';
+import AuthenticationService from '../../services/AuthenticationService';
+import TokenService from '../../services/TokenService';
+import { alert } from '../../utils/alerts';
+
+const { loginUser } = AuthenticationService()
+const { saveToken } = TokenService()
 
 const useStyles = createUseStyles({
     button: {
@@ -30,14 +37,26 @@ const useStyles = createUseStyles({
             textDecoration: 'underline'
         }
     },
-   
+   alerts:  {
+    textAlign: 'initial',
+    color: 'var(--red)'
+    }
 })
 
 const SignIn = () => {
     const navigate = useNavigate()
     const classes = useStyles()
     const formClasses = useFormStyles()
+    const { setUser } = useContext(UserContext)
     const [loginData, setLoginData] = useReducer(formReducer, {})
+    const [validated, setValidated] = useState(true)
+    let mounted = useRef(true)
+
+    const formIsValid = () => {
+        let { password, email } = loginData
+
+        return !!(password && email && email.includes('@'))
+    }
 
     const handleInput = event => {
         const isChecked = event.target.type === 'checkbox'
@@ -47,15 +66,37 @@ const SignIn = () => {
         })
     }
 
-    const handleSubmit = event => {
-        event.preventDefault()
+    const handleSubmit =  async () => {
+        if (!formIsValid()) {
+            setValidated(false)
+            return;
+        } else {
+            setValidated(true)
+        }
         console.log(loginData)
+        const loginResponse = await loginUser(loginData)
+        console.log('response from inside component', loginResponse)
+        if (mounted.current) {
+            if (!loginResponse || (loginResponse && loginResponse.responseCode !== '100')) {
+                alert("Error logging in", 'danger')
+            } else {
+                setUser(loginResponse.data)
+                saveToken(loginResponse?.data?.token)
+                navigate('/dashboard')
+            }
+        }
     }
 
     const goBack = event => {
         event.preventDefault()
         navigate(-1)
     }
+
+    useEffect(() => {
+        mounted.current = true
+
+        return () => mounted.current = false
+    })
 
     return (
         <Fragment>
@@ -65,7 +106,9 @@ const SignIn = () => {
             <div className={formClasses.formGroup}>
                 <label htmlFor='email'>Your Email</label>
                 <Input id='email' name='email' placeholder='Enter your Email' type='email'
-                    required value={loginData.email || ''} onChange={handleInput}/>
+                    required value={loginData.email || ''} onChange={handleInput}
+                    status={(!validated && (!loginData.email || (loginData.email && !loginData.email.includes('@')))) ? 'error' : undefined}/>
+                { (!validated && (!loginData.email || (loginData.email && !loginData.email.includes('@')))) && <small className={classes.alerts}>This field is required</small>}
             </div>
 
             <div className={formClasses.formGroup}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { createUseStyles } from 'react-jss';
 import { AppLogo } from '../assets/app-logo';
 
@@ -18,12 +18,25 @@ const useStyles = createUseStyles({
     }
 })
 
+const pathsToDisableAlertDiv = ['otp-verification']
+
 const Home = () => {
     const classes = useStyles()
+    const { pathname } = useLocation()
+
+    const toggleAlertDiv = () => {
+        let pathArray = pathname.split('/').filter(Boolean)
+        const path = pathArray[pathArray.length - 1]
+    
+        return pathsToDisableAlertDiv.includes(path) ? false : true
+      }
 
     return (
         <div className={classes.wrapper}>
             <AppLogo/>
+
+            
+            { toggleAlertDiv() && (<div id='alertDiv'></div>)}
 
             <Outlet/>
         </div>

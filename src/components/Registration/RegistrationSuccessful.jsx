@@ -26,15 +26,15 @@ const RegistrationSuccessful = () => {
     const [currentStep, setCurrentStep] = step ?? []
     const [userData, ] = user ?? []
 
+    const gotoDashboard = () => {
+        navigate('/dashboard')
+    }
+
     useEffect(() => {
         if (currentStep !== 3) {
             setCurrentStep(3)
         }
     })
-
-    const gotoDashboard = () => {
-        navigate('/dashboard')
-    }
 
     return (
         <Fragment>
