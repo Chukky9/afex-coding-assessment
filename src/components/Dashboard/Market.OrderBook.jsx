@@ -3,6 +3,8 @@ import { createUseStyles } from 'react-jss';
 import CustomTable from '../CustomTable';
 import { manager } from '../../utils/helpers';
 
+const products = ['Soybean (SBBS)', 'Sorghum (SSGM)', 'Maize (SMAZ)', 'Paddy Rice (SPRL)', 'Cocoa (SCOC)']
+
 const useStyles = createUseStyles({
     wrapper: {
         margin: '0.5em',
@@ -10,11 +12,11 @@ const useStyles = createUseStyles({
         borderRadius: '0.2em',
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         height: '100%',
         '& .second-div': {
-            height: '40%',
-            maxHeight: '40%',
+            height: '45%',
+            maxHeight: '45%',
             overflowY: 'auto',
             '& > span': {
                 display: 'flex',
@@ -27,13 +29,99 @@ const useStyles = createUseStyles({
     },
     tradeDiv: {
         display: 'flex',
+        height: '45%',
+        maxHeight: '45%',
         '& .buy-sell': {
             width: '50%',
             margin: '0.2em',
             background: 'var(--white)',
         },
+    },
+    button: {
+
     }
 })
+const defaultColumns = [
+    {
+        title: 'Products',
+        dataIndex: 'products',
+        key: 'products',
+        render: product => {
+            return (
+                <span style={{ fontWeight: 600, fontSize: '0.9em', whiteSpace: 'nowrap' }}>
+                    { product }
+                </span>
+            )
+        }
+    },
+    {
+        title: 'Quantity',
+        dataIndex: 'quantity',
+        key: 'quantity',
+        render: quantity => {
+            return (
+                <span style={{ fontWeight: 600, fontSize: '0.9em' }}>
+                    { quantity }
+                </span>
+            )
+        }
+    }
+]
+
+const buttonStyles = {
+    fontSize: '0.9em',
+    fontWeight: 600,
+    padding: '0.1em 1em',
+    background: 'none'
+}
+
+const tableOneColumns = [
+    ...defaultColumns,
+    {
+        title: 'Bid Price',
+        dataIndex: 'price',
+        key: 'price',
+        render: price => {
+            return (
+                <span style={{ color: 'var(--green)' }}>
+                    {price}
+                </span>
+            )
+        }
+    },
+    {
+        title: '',
+        key: 'action',
+        render: () => {
+            return (
+                <button style={{ ...buttonStyles, color: 'var(--green)', border: '1px solid var(--green)' }}>Buy</button>
+            )
+        }
+    }
+]
+
+const tableTwoColumns = [
+    ...defaultColumns,
+    {
+        title: 'Offer Price',
+        dataIndex: 'price',
+        key: 'price',
+        render: price => {
+            return (
+                <span style={{ color: 'var(--red)' }}>{price}</span>
+            )
+        }
+    },
+    {
+        title: '',
+        key: 'action',
+        render: () => {
+            return (
+                <button style={{ ...buttonStyles, color: 'var(--red)', border: '1px solid var(--red)' }}>Sell</button>
+            )
+        }
+    }
+]
 
 const tradeLogTableColumns = [
     {
@@ -85,10 +173,16 @@ const tradeLogTableColumns = [
     }
 ]
 
+const customTableData = Array.from(Array(10), (elem, i) => ({
+    id: i + 1,
+    products: products[Math.floor(Math.random() * products.length)],
+    quantity: Math.floor(Math.random() * 10000).toString(), referral_code: "", company_phone: '+234' + Math.floor(Math.random() * 1000),
+    price: ['1736.92 ', '3627.00 ', '8294.01', '8192.00', '1736.92 '][Math.floor(Math.random() * 5)],
+}))
+
 const Market_OrderBook = () => {
     const classes = useStyles()
     const [tradeLogTableData, setTradeLogTableData] = useState([])
-    const [serverMessage, setServerMessage] = useState([])
     const [webSocketReady, setWebSocketReady] = useState(false)
     const [webSocket, setWebSocket] = useState(new WebSocket("wss://comx-sand-api.afexnigeria.com/stream/trades"))
     let mounted = useRef(true)
@@ -149,10 +243,10 @@ const Market_OrderBook = () => {
         <div className={classes.wrapper}>
             <div className={classes.tradeDiv}>
                 <div className='buy-sell'>
-                    <CustomTable options={[]} columns={[]}/>
+                    <CustomTable options={customTableData} columns={tableOneColumns} scroll={{ y: 240 }}/>
                 </div>
                 <div className='buy-sell'>
-                    <CustomTable options={[]} columns={[]}/>
+                    <CustomTable options={customTableData} columns={tableTwoColumns} scroll={{ y: 240 }}/>
                 </div>
             </div>
             <div className='second-div'>

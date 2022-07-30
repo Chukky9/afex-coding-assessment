@@ -1,5 +1,14 @@
 import Manager from "../utils/encryption";
 
+const currencyOptions = {
+    minimumFractionDigits: 0,
+    MaximumFractionDigits: 2
+}
+
+export const getPrice = (price = 0) => {
+    return price.toLocaleString(undefined, currencyOptions)
+}
+
 export const formReducer = (state, event = null) => {
     if (!event) {
         return {}

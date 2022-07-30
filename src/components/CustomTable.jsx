@@ -19,7 +19,6 @@ const useStyles = createUseStyles({
 })
 
 const CustomTable = ({ columns, options, style, ...rest}) => {
-    console.log({ options, columns })
     const classes = useStyles()
     const [dataSource, setDataSource] = useState([])
     const [loading, setLoading] = useState(false)
