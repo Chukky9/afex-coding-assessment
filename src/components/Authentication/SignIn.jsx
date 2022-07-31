@@ -35,6 +35,14 @@ const useStyles = createUseStyles({
         '& :hover': {
             color: 'var(--red)',
             textDecoration: 'underline'
+        },
+        '@media (max-width: 1024px)': {
+            fontSize: '0.7em'
+        }
+    },
+    mediaClass: {
+        '@media (max-width: 1024px)': {
+            fontSize: '0.7em'
         }
     },
    alerts:  {
@@ -118,10 +126,10 @@ const SignIn = () => {
                     iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}/>
             </div>
 
-            <div className={formClasses.formLine}>
+            <div className={`${formClasses.formLine}`}>
                 <Checkbox htmlFor="remember_me" label="Remember me"
                     id="remember_me" name="remember_me" onChange={handleInput}
-                    checked={loginData.remember_me || false}>
+                    checked={loginData.remember_me || false} className={classes.mediaClass}>
                     Stay Signed In
                 </Checkbox>
 

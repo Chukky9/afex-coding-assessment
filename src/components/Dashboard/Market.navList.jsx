@@ -1,15 +1,11 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import { createUseStyles } from 'react-jss';
+import { SearchOutlined } from '@ant-design/icons';
 import { ProductViewIcon, OrderBookIcon, PriceHistoryIcon, OpenOrdersIcon, ClosedTradesIcon, CancelledTradesIcon } from '../../assets/icons/DashboardMarketIcons';
 
 const useStyles = createUseStyles({
-    container: {
-        width: '94%',
-        display: 'flex'
-    },
     navList: {
         background: 'var(--white)',
         height: 'fit-content',
@@ -18,11 +14,8 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
-        '@media (max-width: 768px)': {
-            display: 'none'
-        },
         '& a': {
-            padding: '1em',
+            padding: '0.3em',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'start',
@@ -31,7 +24,7 @@ const useStyles = createUseStyles({
             fontWeight: 600,
             whiteSpace: 'nowrap',
             '& svg': {
-                margin: '0 0.8em',
+                margin: '0 0.4em',
             }
         }
     },
@@ -50,32 +43,28 @@ const navLinks = [
     { name: 'Cancelled Trades', link: '/dashboard/market/cancelled-trades', icon: (<CancelledTradesIcon/>) },
 ]
 
-const Market = () => {
+const Market_NavList = () => {
     const classes = useStyles()
 
-    return (
-        <div className={classes.container}>
-            <div className={classes.navList}>
-                <div className={classes.searchDiv}>
-                    <Input prefix={<SearchOutlined/>}/>
-                </div>
-
-                {
-                    navLinks.map(link => (
-                        <NavLink key={link.name} to={link.link}
-                            style={({ isActive}) => ({
-                                color: isActive ? 'var(--red)' : 'var(--black)'
-                            })}>
-                            { link.icon }
-                            { link.name }
-                        </NavLink>
-                    ))
-                }
+    return ( 
+        <div className={classes.navList}>
+            <div className={classes.searchDiv}>
+                <Input prefix={<SearchOutlined/>}/>
             </div>
 
-            <Outlet/>
+            {
+                navLinks.map(link => (
+                    <NavLink key={link.name} to={link.link}
+                        style={({ isActive}) => ({
+                            color: isActive ? 'var(--red)' : 'var(--black)'
+                        })}>
+                        { link.icon }
+                        { link.name }
+                    </NavLink>
+                ))
+            }
         </div>
-    );
+     );
 }
  
-export default Market;
+export default Market_NavList;

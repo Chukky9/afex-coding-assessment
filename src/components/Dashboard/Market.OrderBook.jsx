@@ -31,10 +31,18 @@ const useStyles = createUseStyles({
         display: 'flex',
         height: '45%',
         maxHeight: '45%',
+        '@media (max-width: 768px)': {
+            flexDirection: 'column',
+            height: 'fit-content',
+            maxHeight: 'fit-content'
+        },
         '& .buy-sell': {
             width: '50%',
             margin: '0.2em',
             background: 'var(--white)',
+            '@media (max-width: 768px)': {
+                width: '100%',
+            },
         },
     },
     button: {
@@ -48,7 +56,7 @@ const defaultColumns = [
         key: 'products',
         render: product => {
             return (
-                <span style={{ fontWeight: 600, fontSize: '0.9em', whiteSpace: 'nowrap' }}>
+                <span style={{ fontWeight: 600, fontSize: '0.9em' }}>
                     { product }
                 </span>
             )

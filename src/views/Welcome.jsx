@@ -10,6 +10,15 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        '@media (max-width: 1024px)': {
+            width: '70%'
+        },
+        '@media (max-width: 768px)': {
+            width: '90%',
+        },
+        '@media (max-width: 420px)': {
+            width: '95%'
+        },
         '& a': {
             margin: '1em 0',
             border: 'none',
