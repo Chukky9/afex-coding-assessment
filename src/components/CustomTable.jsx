@@ -13,7 +13,10 @@ const useStyles = createUseStyles({
         width: '100%',
         margin: '1em 0',
         '& .ant-table-cell': {
-            textAlign: 'center'
+            textAlign: 'center',
+            '@media (max-width: 768px)': {
+                textAlign: 'initial'
+            },
         }
     }
 })

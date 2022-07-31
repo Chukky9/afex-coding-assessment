@@ -14,6 +14,19 @@ const useStyles = createUseStyles({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
+        '@media (max-width: 1024px)': {
+            width: '70%'
+        },
+        '@media (max-width: 768px)': {
+            width: '80%',
+            padding: '0.3em'
+        },
+        '@media (max-width: 420px)': {
+            width: '95%'
+        },
+        '@media (max-width: 320px)': {
+            width: '100%',
+        }
     },
     steps: {
         '& .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon .ant-steps-icon-dot': {
@@ -27,7 +40,13 @@ const useStyles = createUseStyles({
         }
     },
     stepsDiv: {
-        margin: '1em 0'
+        margin: '1em 0',
+        '& div': {
+            width: '100%',
+            '& div': {
+                width: '25%',
+            }
+        }
     },
     small: {
         textAlign: 'center',
@@ -52,7 +71,7 @@ const Register = () => {
             </small>
 
             <div className={classes.stepsDiv}>
-                <Steps progressDot current={currentStep} className={classes.steps}>
+                <Steps progressDot current={currentStep} className={classes.steps} responsive={false}>
                     <Step title=''></Step>
                     <Step title=''></Step>
                     <Step title=''></Step>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { createUseStyles } from 'react-jss';
 import TopBar from '../components/Dashboard/TopBar';
 import SideBar from '../components/Dashboard/SideBar';
@@ -8,7 +8,6 @@ import { Outlet } from 'react-router-dom';
 const useStyles = createUseStyles({
     wrapper: {
         minHeight: '100vh',
-        height: '100vh',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
